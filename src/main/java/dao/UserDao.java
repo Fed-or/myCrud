@@ -42,31 +42,6 @@ public class UserDao {
         return true;
     }
 
-//    String insertIntoTableSql = "INSERT INTO users"
-//            + "(firstName, lastName, login, password, address, email) VALUES"
-//            + "(?,?,?,?,?,?)";
-//        try(
-//    PreparedStatement preparedStatement = dbConnection.prepareStatement(insertIntoTableSql))
-//
-//    {
-//        if (preparedStatement != null) {
-//            preparedStatement.setString(1, user.getFirstName());
-//            preparedStatement.setString(2, user.getLastName());
-//            preparedStatement.setString(3, user.getLogin());
-//            preparedStatement.setString(4, user.getAddress());
-//            preparedStatement.setString(5, user.getEmail());
-//            preparedStatement.executeQuery();
-//            System.out.println("Record into table is done");
-//        }
-//    } catch(
-//    SQLException e)
-//
-//    {
-//        e.printStackTrace();
-//    }
-//        return true;
-//}
-
     public User getUserById(long id) {
         User user = null;
         String selectFromTableSql = "select * from users " +
@@ -154,21 +129,6 @@ public class UserDao {
         }
         return idUser;
     }
-//
-//    public void deleteUserByLogin(String login) {
-//        String deleteFromTableSql = "delete * from users " +
-//                "where login = ?";
-//        try (PreparedStatement preparedStatement =
-//                     dbConnection.prepareStatement(deleteFromTableSql)) {
-//            if (preparedStatement != null) {
-//                preparedStatement.setString(1, login);
-//                preparedStatement.executeUpdate();
-//                System.out.println("User is delete");
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public void deleteUserById(long id) {
         String deleteFromTableSql = "delete * from users " +
