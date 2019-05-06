@@ -1,8 +1,0 @@
-# Compiled class file
-*.class
-
-.idea
-
-/out
-
-*.iml
