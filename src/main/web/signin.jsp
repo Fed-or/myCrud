@@ -18,6 +18,11 @@
     </h>
 </c:if>
 
+<c:if test="${param.message == 'hello'}">
+    <p><h>Привет, </h>
+     <c:out value="${helloUser}" /></p>
+</c:if>
+
 <form action="signin" method="post">
 
     <td>Логин <input type="text" name="login"/></td>

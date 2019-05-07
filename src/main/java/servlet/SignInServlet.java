@@ -29,12 +29,13 @@ public class SignInServlet extends HttpServlet {
 
         User user = USERDAO.getUserByLoginAndPass(login, password);
         if (user != null) {
-            out.print("Привет " + user.getFirstName());
-        } else {
-            out.println("Такого пользователя в базе нет");
-            req.setAttribute("allUsers", USERDAO.getAllUsers());
+            String helloUser = user.getFirstName();
+            req.setAttribute("helloUser", helloUser);
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher("signin.jsp?message=hello");
+            requestDispatcher.forward(req, resp);
 
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("signin.jsp");
+        } else {
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher("noninformation.jsp?message=isNotPresent");
             requestDispatcher.forward(req, resp);
         }
     }

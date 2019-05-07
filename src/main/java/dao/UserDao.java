@@ -2,10 +2,12 @@ package dao;
 
 import model.User;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class UserDao {
     private static dao.UserDao instance;
@@ -22,20 +24,31 @@ public class UserDao {
     }
 
     public boolean addUser(User user) {
-        Statement statement;
-        try {
-            statement = dbConnection.createStatement();
-            statement.execute("create TABLE IF NOT EXISTS users (id BIGINT not null auto_increment, "
-                    + "firstName VARCHAR(45), lastName VARCHAR(45), login varchar(45), " +
-                    "pass VARCHAR(45), address VARCHAR(45), email VARCHAR(45), PRIMARY KEY (id));");
-            String sql = "INSERT INTO users(firstName, lastName, login, pass, address, email) VALUES('"
-                    + user.getFirstName() + "' , '"
-                    + user.getLastName() + "' , '"
-                    + user.getLogin() + "','"
-                    + user.getPassword() + "','"
-                    + user.getAddress() + "','"
-                    + user.getEmail() + "');";
-            statement.execute(sql);
+        String addUserIntoTable = "CREATE TABLE IF NOT EXISTS users " +
+                "(id BIGINT not null auto_increment, " +
+                "firstName VARCHAR(45), lastName VARCHAR(45), login varchar(45), " +
+                "pass VARCHAR(45), address VARCHAR(45), email VARCHAR(45), PRIMARY KEY (id));";
+
+        String insertPropertiesUserSql = "INSERT INTO users(firstName, lastName, login, pass, address, email) VALUES('"
+                + user.getFirstName() + "' , '"
+                + user.getLastName() + "' , '"
+                + user.getLogin() + "','"
+                + user.getPassword() + "','"
+                + user.getAddress() + "','"
+                + user.getEmail() + "');";
+
+        try (PreparedStatement preparedStatement =
+                     dbConnection.prepareStatement(addUserIntoTable)) {
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        try (PreparedStatement preparedStatement =
+                     dbConnection.prepareStatement(insertPropertiesUserSql)) {
+            if (preparedStatement != null) {
+                preparedStatement.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -73,13 +86,13 @@ public class UserDao {
         String selectUserByNameSql = "select * from users where id = ? AND id = ?";
         try (PreparedStatement preparedStatement =
                      dbConnection.prepareStatement(selectUserByNameSql)) {
-                preparedStatement.setString(1, firstName);
-                preparedStatement.setString(2, lastName);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                while (resultSet.next()) {
-                    idUser = resultSet.getInt("id");
-                }
-       } catch (SQLException e) {
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                idUser = resultSet.getInt("id");
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return idUser;
@@ -138,7 +151,6 @@ public class UserDao {
             if (preparedStatement != null) {
                 preparedStatement.setLong(1, id);
                 preparedStatement.executeUpdate();
-                System.out.println("User is delete");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -158,7 +170,6 @@ public class UserDao {
                 preparedStatement.setString(4, getUserByLoginAndPass(login, password).getAddress());
                 preparedStatement.setString(5, getUserByLoginAndPass(login, password).getEmail());
                 preparedStatement.executeUpdate();
-                System.out.println("Update User into table is done");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -197,7 +208,7 @@ public class UserDao {
                 String login = resultSet.getString("login");
                 String pass = resultSet.getString("pass");
                 String address = resultSet.getString("address");
-                String email =  resultSet.getString("email");
+                String email = resultSet.getString("email");
                 User user = new User(user_Id, firstname, lastName, login, pass, address, email);
                 usersList.add(user);
             }
