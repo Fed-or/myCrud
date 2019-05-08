@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @WebServlet(value = "/signin")
 public class SignInServlet extends HttpServlet {
@@ -23,7 +22,6 @@ public class SignInServlet extends HttpServlet {
         resp.setContentType("text/html");
         resp.setCharacterEncoding("UTF-8");
 
-        PrintWriter out = resp.getWriter();
         String login = req.getParameter("login");
         String password = req.getParameter("pass");
 

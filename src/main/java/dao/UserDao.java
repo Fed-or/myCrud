@@ -29,13 +29,7 @@ public class UserDao {
                 "firstName VARCHAR(45), lastName VARCHAR(45), login varchar(45), " +
                 "pass VARCHAR(45), address VARCHAR(45), email VARCHAR(45), PRIMARY KEY (id));";
 
-        String insertPropertiesUserSql = "INSERT INTO users(firstName, lastName, login, pass, address, email) VALUES('"
-                + user.getFirstName() + "' , '"
-                + user.getLastName() + "' , '"
-                + user.getLogin() + "','"
-                + user.getPassword() + "','"
-                + user.getAddress() + "','"
-                + user.getEmail() + "');";
+        String insertPropertiesUserSql = "INSERT INTO users (firstName, lastName, login, pass, address, email) VALUES ('?','?','?','?','?','?')";
 
         try (PreparedStatement preparedStatement =
                      dbConnection.prepareStatement(addUserIntoTable)) {
@@ -47,13 +41,20 @@ public class UserDao {
         try (PreparedStatement preparedStatement =
                      dbConnection.prepareStatement(insertPropertiesUserSql)) {
             if (preparedStatement != null) {
-                preparedStatement.executeUpdate();
+                preparedStatement.setString(1, user.getFirstName());
+                preparedStatement.setString(2,user.getLastName());
+                preparedStatement.setString(3, user.getLogin());
+                preparedStatement.setString(4, user.getPassword());
+                preparedStatement.setString(5, user.getAddress());
+                preparedStatement.setString(6, user.getEmail());
+                preparedStatement.executeQuery();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
         return true;
-    }
+}
 
     public User getUserById(long id) {
         User user = null;
